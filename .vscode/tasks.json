@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build & Run All C Files",
+            "type": "shell",
+            "command": "mkdir -p ${fileDirname}/build && clang ${fileDirname}/*.c -o ${fileDirname}/build/program && ${fileDirname}/build/program",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "close": false
+            }
+        }
+    ]
+}
