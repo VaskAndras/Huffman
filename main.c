@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "types.h"
-#include "from_array_to_binary_tree.h"
+#include "tree_creating.h"
 #include "merge_sort.h"
 #include "debugmalloc.h"
 

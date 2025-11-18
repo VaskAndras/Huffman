@@ -4,46 +4,19 @@
 #include "debugmalloc.h"
 #include "types.h"
 #include "merge_sort.h"
-#include "from_array_to_binary_tree.h"
-
-CharStat* compress_chars_dynamic(const int *input, int size, int *out_count) {
-    int count = 0;
-
-    // firstly count the number of nonzero elements
-    for (int i = 0; i < size; i++) {
-        if (input[i] != 0) {
-            count++;
-        }
-    }
-
-    // is there is no nonzero we go back with the nullpointer
-    if (count == 0) {
-        *out_count = 0;
-        return NULL;
-    }
-
-    // Dinamic memory allocation fro the counting
-    CharStat *result = malloc(count * sizeof(CharStat));
-    if (result == NULL) {
-        perror("Memory allocation error in compress_chars_dynamic");
-        exit(EXIT_FAILURE);
-    }
-
-    // filling the new array
-    int j = 0;
-    for (int i = 0; i < size; i++) {
-        if (input[i] != 0) { // we want just the nonyero elements
-            result[j].character = (char)i;
-            result[j].count = input[i];
-            j++;
-        }
-    }
-    // passing back the length
-    *out_count = count;
-
-    // passing back the array
-    return result;
-}
+#include "tree_creating.h"
+/*
+================================================================
+                        TREE_CREATING.C
+================================================================
+This file contains functions related to creating and managing the Huffman tree.
+Functions:
+1. create_a_new_node: Creates a new tree node from two child nodes
+2. create_a_pointer_array: Creates an array of pointers to CharStat structures
+3. create_a_tree: Builds the Huffman tree from an array of CharStat pointers
+4. free_huffman_tree: Frees the memory allocated for the Huffman tree
+5. from_array_to_character_codes: Converts an input frequency array to Huffman codes using the Huffman tree
+*/
 
 CharStat* create_a_new_node(CharStat *left, CharStat *right) {
 // This is a function for creating a new node of the tree
@@ -132,6 +105,7 @@ void free_huffman_tree(CharStat* root) {
     free_huffman_tree(root->Right); // free the right side recursively
     free(root);                     // free the root
 }
+
 
 
 
