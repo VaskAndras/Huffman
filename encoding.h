@@ -60,19 +60,22 @@ void create_a_file_if_not_exists(char* filename);
 // Parameters:
 // - filename: name of the file to create
 
+
 void create_a_header(char* filename, CharStat* filtered_array, int size);
-// Creates a header in the specified file containing character statistics
+// Creates a header file containing character frequency data
 // Parameters:
-// - filename: name of the file to write the header to
-// - filtered_array: array of CharStat structures containing character statistics
+// - filename: name of the header file to create
+// - filtered_array: array of CharStat containing character frequencies
 // - size: number of elements in the filtered_array
 
-void write_encoded_data(char* filename, binary_huffman_code* binary_codes, int size);
-// Writes the encoded data to the specified file
+void write_encoded_data(char* input_filename,char* output_filename , binary_huffman_code* binary_codes, int size);
+// Writes encoded data to a binary file
 // Parameters:
-// - filename: name of the file to write the encoded data to
-// - binary_codes: array of binary_huffman_code structures containing the encoded data
+// - input_filename: name of the input file to read original data from
+// - output_filename: name of the output file to write encoded data to
+// - binary_codes: array of binary_huffman_code for encoding
 // - size: number of elements in the binary_codes array
+
 
 
 #endif

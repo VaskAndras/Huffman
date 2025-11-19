@@ -184,5 +184,135 @@ binary_huffman_code* convert_to_binary_huffman_codes(huffman_codes* codes, int s
          }   
         }
     }
+    merge_sort_binary_huffman_codes(binary_codes, 0, size - 1); // sort the array for easier searching later
+
     return binary_codes;
 }
+void create_a_file_if_not_exists(const char* filename) {
+    // The goal is to create a file if it does not exist
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        // File does not exist, create it
+        file = fopen(filename, "w");
+        if (file == NULL) {
+            perror("Error creating file");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        // File exists, just close it
+        fclose(file);
+    }
+}
+
+void create_a_header(char* filename, CharStat* filtered_array, int size) {
+    // The goal is to create a header in the specified file
+    FILE* file = fopen(filename, "wb");
+    if (file == NULL) {
+        perror("Error opening file for header creation");
+        exit(EXIT_FAILURE);
+    }
+    // Write the number of unique characters
+    fwrite(&size, sizeof(int), 1, file);
+    // Write each character and its frequency
+    for (int i = 0; i < size; i++) {
+        fwrite(&filtered_array[i].character, sizeof(char), 1, file);
+        fwrite(&filtered_array[i].count, sizeof(int), 1, file);
+    }
+    fclose(file);
+}
+
+
+void write_encoded_data(char* input_filename,char* output_filename , binary_huffman_code* binary_codes, int size) {
+    // The goal is to write the encoded data to a file
+    FILE* output_file = fopen(output_file, "ab"); // open in append binary mode
+
+    // Error handling for file opening
+    if (output_file == NULL) {
+        perror("Error opening file for writing encoded data");
+        exit(EXIT_FAILURE);
+    }
+    // open the original file to read and encode its content
+    FILE* input_file = fopen(input_filename, "r"); // open in read mode
+
+    // Error handling for file opening
+    if (input_file == NULL) {
+        perror("Error opening input file for encoding");
+        exit(EXIT_FAILURE);
+    }
+    int ch;
+    uint64_t buffer = 0; // buffer to hold bits before writing to file
+    int bit_count = 0; // number of bits currently in the buffer
+    while ((ch = fgetc(input_file)) != EOF) {
+        // Find the corresponding binary_huffman_code for the character
+        binary_huffman_code code = find_binary_huffman_code(binary_codes, size, (char)ch);
+        
+        if (code.bit_len == 0) {
+            fprintf(stderr, "Error: Character '%c' not found in binary_huffman_code array\n", ch);
+            exit(EXIT_FAILURE);
+        }
+        // Write the bits of the code to the buffer
+
+    // worst case scenario the code is longer than 64 bits
+       if (code.bit_len > 64) {
+            
+            int remaining_bits = code.bit_len; // bits left to write
+            int bit_index = 0; // current bit index in the code
+            
+            // Write in chunks of 63 bits
+            while (remaining_bits > 0) {
+                // Determine how many bits to write in this chunk (max 63)
+                int bits_to_write = remaining_bits > 63 ? 63 : remaining_bits; // max 63 bits at a time
+                // Extract the chunk from the code
+                uint64_t chunk = 0; 
+
+                // Build the chunk bit by bit
+                for (int i = 0; i < bits_to_write; i++) {
+                    int byte_index = (bit_index + i) / 8; // which byte
+                    int bit_index_in_byte = 7 - ((bit_index + i) % 8); // which bit in the byte
+                    int bit = (code.bits[byte_index] >> bit_index_in_byte) & 1; // extract the bit
+                    chunk = (chunk << 1) | bit; // append the bit to the chunk 
+                }
+                // Append chunk to buffer
+                for (int i = 0; i < bits_to_write; i++) {
+                    int bit = (chunk >> (bits_to_write - 1 - i)) & 1;
+                    buffer = (buffer << 1) | bit;
+                    bit_count++;
+                    if (bit_count == 8) {
+                        unsigned char byte_to_write = (unsigned char)(buffer & 0xFF);
+                        fwrite(&byte_to_write, sizeof(unsigned char), 1, output_file);
+                        buffer = 0; // reset buffer
+                        bit_count = 0; // reset bit count
+                    }
+                }
+                remaining_bits -= bits_to_write; // decrease remaining bits by the number written
+                bit_index += bits_to_write; // move the bit index forward
+            }
+        }
+        else {
+            // Normal case: code length <= 64 bits
+            for (int i = 0; i < code.bit_len; i++) {
+                int byte_index = i / 8; // which byte
+                int bit_index_in_byte = 7 - (i % 8); // which bit
+                int bit = (code.bits[byte_index] >> bit_index_in_byte) & 1; // extract the bit
+                buffer = (buffer << 1) | bit; // append the bit to the buffer
+                bit_count++;
+                // If we have 8 bits in the buffer, write it to the file
+                if (bit_count == 8) {
+                    unsigned char byte_to_write = (unsigned char)(buffer & 0xFF);
+                    fwrite(&byte_to_write, sizeof(unsigned char), 1, output_file);
+                    buffer = 0; // reset buffer
+                    bit_count = 0; // reset bit count
+                }
+            }
+        }
+    }
+    // Write any remaining bits in the buffer to the file
+    if (bit_count > 0) {
+        buffer <<= (8 - bit_count); // shift to fill the last byte 
+        unsigned char byte_to_write = (unsigned char)(buffer & 0xFF); // get the last byte
+        fwrite(&byte_to_write, sizeof(unsigned char), 1, output_file); // write it to the file
+    } 
+    fclose(input_file);
+    fclose(output_file);
+}
+

@@ -153,3 +153,28 @@ void merge_sort_for_binary(binary_huffman_code **array, int length){
     // this will do the hard work.
     merge_for_binary(array, left_length, right_length);
 }
+
+binary_huffman_code* find_binary_code(binary_huffman_code* array, int size, char ch) {
+    // Binary search for a character in a sorted array of binary_huffman_code
+    // it is great, bc we sorted it before with merge sort
+    int left = 0;
+    int right = size - 1;
+    // Standard binary search algorithm
+    while (left <= right) {
+        //calculate mid index
+        int mid = left + (right - left) / 2;
+
+        // Check if the character is at mid
+        if (array[mid].ch == ch) {
+            return &array[mid]; // Character found
+
+        // Check which half to search next
+        } else if (array[mid].ch < ch) {
+            left = mid + 1; // Search in the right half
+        } else {
+            right = mid - 1; // Search in the left half
+        }
+    }
+
+    return NULL; // Character not found
+}
