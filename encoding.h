@@ -47,14 +47,6 @@ binary_huffman_code* convert_to_binary_huffman_codes(huffman_codes* codes, int s
 // - pointer to the newly created array of binary_huffman_code
 // this works with the absolute black magic of bitwise operations
 
-void from_array_to_character_codes(int *input, int size, int *out_count, huffman_codes **out_codes);
-// Main function to convert an array of character frequencies to Huffman codes
-// Parameters:
-// - input: array of character frequencies
-// - size: size of the input array
-// - out_count: pointer to store the number of unique characters (size of the output codes array)
-// - out_codes: pointer to store the pointer to the newly created array of huffman_codes
-
 void create_a_file_if_not_exists(char* filename);
 // Creates a file with the given filename if it does not already exist
 // Parameters:
@@ -75,7 +67,11 @@ void write_encoded_data(char* input_filename,char* output_filename , binary_huff
 // - output_filename: name of the output file to write encoded data to
 // - binary_codes: array of binary_huffman_code for encoding
 // - size: number of elements in the binary_codes array
-
+void encoding_main(char* input_filename, char* output_filename);
+// Main function to handle the encoding process
+// Parameters:
+// - input_filename: name of the input file to read original data from
+// - output_filename: name of the output file to write encoded data to
 
 
 #endif

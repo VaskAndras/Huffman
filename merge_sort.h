@@ -43,7 +43,7 @@ void merge_sort_for_binary(binary_huffman_code **array, int length);
 // Sorts the array in place
 // works with merge_for_binary function(recursive)
 
-binary_huffman_code find_binary_huffman_code(binary_huffman_code *array, int size, char ch);
+binary_huffman_code find_binary_code(binary_huffman_code* array, int size, char ch);
 // Binary search for a character in a sorted array of binary_huffman_code
 // Parameters:
 // - array: pointer to the sorted array of binary_huffman_code

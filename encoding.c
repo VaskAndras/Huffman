@@ -188,7 +188,7 @@ binary_huffman_code* convert_to_binary_huffman_codes(huffman_codes* codes, int s
 
     return binary_codes;
 }
-void create_a_file_if_not_exists(const char* filename) {
+void create_a_file_if_not_exists(char* filename) {
     // The goal is to create a file if it does not exist
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
@@ -224,7 +224,7 @@ void create_a_header(char* filename, CharStat* filtered_array, int size) {
 
 void write_encoded_data(char* input_filename,char* output_filename , binary_huffman_code* binary_codes, int size) {
     // The goal is to write the encoded data to a file
-    FILE* output_file = fopen(output_file, "ab"); // open in append binary mode
+    FILE* output_file = fopen(output_filename, "ab"); // open in append binary mode
 
     // Error handling for file opening
     if (output_file == NULL) {
@@ -244,7 +244,7 @@ void write_encoded_data(char* input_filename,char* output_filename , binary_huff
     int bit_count = 0; // number of bits currently in the buffer
     while ((ch = fgetc(input_file)) != EOF) {
         // Find the corresponding binary_huffman_code for the character
-        binary_huffman_code code = find_binary_huffman_code(binary_codes, size, (char)ch);
+        binary_huffman_code code = find_binary_code(binary_codes, size, (char)ch);
         
         if (code.bit_len == 0) {
             fprintf(stderr, "Error: Character '%c' not found in binary_huffman_code array\n", ch);
@@ -316,3 +316,22 @@ void write_encoded_data(char* input_filename,char* output_filename , binary_huff
     fclose(output_file);
 }
 
+void encoding_main(char* input_filename, char* output_filename){
+    // Main function to handle the encoding process
+    int frequency_array_size = 0;
+    CharStat* frequency_array = create_frequency_array(input_filename, &frequency_array_size);
+    // creating a pointer array for the huffman tree creation
+    CharStat **pointer_array = create_pointer_array(frequency_array, frequency_array_size);
+    // Build the Huffman tree
+    CharStat *huffman_tree_root = build_huffman_tree(pointer_array, frequency_array_size);
+    // Create the huffman_codes array
+    huffman_codes* codes = fill_the_array(huffman_tree_root, frequency_array_size);
+    // Convert to binary_huffman_code array
+    binary_huffman_code* binary_codes = convert_to_binary_huffman_codes(codes, frequency_array_size);
+    // Create a file if not exists
+    create_a_file_if_not_exists(output_filename);
+    // Create a header in the output file
+    create_a_header(output_filename, frequency_array, frequency_array_size);
+    // Write the encoded data to the output file
+    write_encoded_data(input_filename, output_filename, binary_codes, frequency_array_size);
+}

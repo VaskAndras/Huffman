@@ -154,7 +154,8 @@ void merge_sort_for_binary(binary_huffman_code **array, int length){
     merge_for_binary(array, left_length, right_length);
 }
 
-binary_huffman_code* find_binary_code(binary_huffman_code* array, int size, char ch) {
+
+binary_huffman_code find_binary_code(binary_huffman_code* array, int size, char ch){
     // Binary search for a character in a sorted array of binary_huffman_code
     // it is great, bc we sorted it before with merge sort
     int left = 0;
@@ -166,7 +167,7 @@ binary_huffman_code* find_binary_code(binary_huffman_code* array, int size, char
 
         // Check if the character is at mid
         if (array[mid].ch == ch) {
-            return &array[mid]; // Character found
+            return array[mid]; // Character found
 
         // Check which half to search next
         } else if (array[mid].ch < ch) {
@@ -176,5 +177,6 @@ binary_huffman_code* find_binary_code(binary_huffman_code* array, int size, char
         }
     }
 
-    return NULL; // Character not found
+    // Character not found
+    return (binary_huffman_code){0, NULL, 0};
 }
