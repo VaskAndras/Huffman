@@ -16,6 +16,52 @@ Functions:
 */
 
 // Merge two sorted subarrays: left part of length left_length, right part of length right_length
+
+// Merge two sorted subarrays for Huffman tree (smallest first)
+void merge(CharStat **array, int left_length, int right_length){
+    CharStat **Left = (CharStat**)malloc(left_length * sizeof(CharStat*));
+    CharStat **Right = (CharStat**)malloc(right_length * sizeof(CharStat*));
+
+    if (Left == NULL || Right == NULL) {
+        perror("Memory allocation error in merge");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < left_length; i++) Left[i] = array[i];
+    for (int i = 0; i < right_length; i++) Right[i] = array[left_length + i];
+
+    int leftcount = 0, rightcount = 0, overwrite = 0;
+
+    while (leftcount < left_length && rightcount < right_length) {
+        // Növekvő sorrend: kisebb count előre
+        if (Left[leftcount]->count < Right[rightcount]->count || 
+            (Left[leftcount]->count == Right[rightcount]->count && 
+             Left[leftcount]->character < Right[rightcount]->character)) {
+            array[overwrite++] = Left[leftcount++];
+        } else {
+            array[overwrite++] = Right[rightcount++];
+        }
+    }
+
+    while (leftcount < left_length) array[overwrite++] = Left[leftcount++];
+    while (rightcount < right_length) array[overwrite++] = Right[rightcount++];
+
+    free(Left);
+    free(Right);
+}
+
+void merge_sort(CharStat **array, int length){
+    if (length <= 1) return;
+
+    int left_length = length / 2;
+    int right_length = length - left_length;
+
+    merge_sort(array, left_length);
+    merge_sort(array + left_length, right_length);
+    merge(array, left_length, right_length);
+}
+
+/*
 void merge(CharStat **array, int left_length, int right_length){
     CharStat **Left = (CharStat**)malloc(left_length * sizeof(CharStat*));
     CharStat **Right = (CharStat**)malloc(right_length * sizeof(CharStat*));
@@ -134,7 +180,7 @@ void merge_for_binary(binary_huffman_code **array, int left_length, int right_le
     free(Left);
     free(Right);
 }
-
+*/
 
 void merge_sort_for_binary(binary_huffman_code **array, int length){
     // Recursive merge sort function for binary_huffman_code

@@ -6,6 +6,7 @@
 #include "merge_sort.h"
 #include "tree_creating.h"
 #include "decoding.h"
+#include "encoding.h"
 
 void read_header(char *encoded_file, CharStat **out_array, int *out_size) {
     // Rebuilds the Huffman tree from the header of the encoded file
@@ -108,9 +109,9 @@ void decoding_main(char *input_filename, char *output_filename) {
     read_header(input_filename, &frequency_array, &size);
 
     // creating a pointer array for the huffman tree creation
-    CharStat **pointer_array = create_pointer_array(frequency_array, size);
+    CharStat **pointer_array = create_a_pointer_array(frequency_array, size);
     // Build the Huffman tree
-    CharStat *huffman_tree_root = build_huffman_tree(pointer_array, size);
+    CharStat *huffman_tree_root = create_a_tree(pointer_array, size);
     //create a file if not exists
     create_a_file_if_not_exists(output_filename);
 

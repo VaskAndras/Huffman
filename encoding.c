@@ -184,7 +184,7 @@ binary_huffman_code* convert_to_binary_huffman_codes(huffman_codes* codes, int s
          }   
         }
     }
-    merge_sort_binary_huffman_codes(binary_codes, 0, size - 1); // sort the array for easier searching later
+    merge_sort_for_binary(&binary_codes, size); // sorting the array for faster searching later
 
     return binary_codes;
 }
@@ -321,9 +321,9 @@ void encoding_main(char* input_filename, char* output_filename){
     int frequency_array_size = 0;
     CharStat* frequency_array = create_frequency_array(input_filename, &frequency_array_size);
     // creating a pointer array for the huffman tree creation
-    CharStat **pointer_array = create_pointer_array(frequency_array, frequency_array_size);
+    CharStat **pointer_array = create_a_pointer_array(frequency_array, frequency_array_size);
     // Build the Huffman tree
-    CharStat *huffman_tree_root = build_huffman_tree(pointer_array, frequency_array_size);
+    CharStat *huffman_tree_root = create_a_tree(pointer_array, frequency_array_size);
     // Create the huffman_codes array
     huffman_codes* codes = fill_the_array(huffman_tree_root, frequency_array_size);
     // Convert to binary_huffman_code array

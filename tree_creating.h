@@ -8,16 +8,6 @@ from character frequency data. It includes functions to create tree nodes,
 build the tree, and free the allocated memory.
 */
 
-
-CharStat* compress_chars_dynamic(const int *input, int size, int *out_count);
-// Compresses the input frequency array into a dynamic array of CharStat structures
-// Parameters:
-// - input: array of character frequencies
-// - size: size of the input array
-// - out_count: pointer to store the number of non-zero frequency characters found
-// Returns:
-// - pointer to the dynamically allocated array of CharStat structures
-
 CharStat* create_a_new_node(CharStat *left, CharStat *right);
 // Creates a new internal node for the Huffman tree
 // Parameters:

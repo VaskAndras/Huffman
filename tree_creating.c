@@ -75,6 +75,10 @@ CharStat* create_a_tree(CharStat** array, int size) {
     int current_size = size;
 
     while (current_size > 1) {
+        printf("create_a_tree: current_size=%d\n", current_size);
+    for (int i = 0; i < current_size; i++) {
+        printf(" [%d]=char:%c count:%d\n", i, array[i]->character, array[i]->count);
+    }
         // finding the smallest two elements 
         CharStat* left = array[current_size - 2];
         CharStat* right = array[current_size - 1];
