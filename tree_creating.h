@@ -64,4 +64,27 @@ binary_huffman_code* convert_to_binary_huffman_codes(huffman_codes* codes, int s
 // - pointer to the newly created array of binary_huffman_code
 // this works with the absolute black magic of bitwise operations
 
+int cmp_binary_huffman_code_by_char(const void *pa, const void *pb);
+// Comparison function for qsort to sort binary_huffman_code by character
+// Parameters:
+// - pa: pointer to the first binary_huffman_code
+// - pb: pointer to the second binary_huffman_code
+// Returns:
+// - negative value if first < second
+// - positive value if first > second
+// - zero if equal
+// this is a help for bsearch function to find binary_huffman_code by character
+// this is a help for qsort function to sort binary_huffman_code by character
+
+int cmp_charstat_ptr_by_count(const void *pa, const void *pb);
+// Comparison function for qsort to sort CharStat pointers by count (and character for tie-breaking
+// Parameters:
+// - pa: pointer to the first CharStat pointer
+// - pb: pointer to the second CharStat pointer
+// Returns:
+// - negative value if first < second
+// - positive value if first > second
+// - zero if equal
+// this is a help for qsort function to sort CharStat pointers by count (and character for tie-breaking)
+
 #endif

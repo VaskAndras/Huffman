@@ -3,7 +3,6 @@
 #include <string.h>
 #include "types.h"
 #include "tree_creating.h"
-#include "merge_sort.h"
 #include "debugmalloc.h"
 #include "encoding.h"
 #include "decoding.h"
@@ -11,11 +10,11 @@
 // TESTING MAIN FUNCTION
 
 int main() {
-    char input_filename[256];
-    char encoded_filename[256];
-    char output_filename[256];
+    char input_filename[256];// to store input filename
+    char encoded_filename[256]; // to store encoded filename
+    char output_filename[256]; // to store decoded output filename
 
-    printf("Enter input filename: ");
+    printf("Enter input filename: "); // prompt user for input filename
     scanf("%255s", input_filename);
 
     printf("Enter encoded filename: ");

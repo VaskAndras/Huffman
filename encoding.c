@@ -3,7 +3,6 @@
 #include <string.h>
 #include "debugmalloc.h"
 #include "types.h"
-#include "merge_sort.h"
 #include "tree_creating.h"
 #include "encoding.h"
 
@@ -184,7 +183,8 @@ binary_huffman_code* convert_to_binary_huffman_codes(huffman_codes* codes, int s
          }   
         }
     }
-    merge_sort_for_binary(&binary_codes, size); // sorting the array for faster searching later
+    // Sort the binary_codes array by character for easier searching later
+    qsort(binary_codes, size, sizeof(binary_huffman_code), cmp_binary_huffman_code_by_char);
 
     return binary_codes;
 }
@@ -244,12 +244,13 @@ void write_encoded_data(char* input_filename,char* output_filename , binary_huff
     int bit_count = 0; // number of bits currently in the buffer
     while ((ch = fgetc(input_file)) != EOF) {
         // Find the corresponding binary_huffman_code for the character
-        binary_huffman_code code = find_binary_code(binary_codes, size, (char)ch);
+        binary_huffman_code* code_ptr = bsearch(&ch, binary_codes, size, sizeof(binary_huffman_code), cmp_binary_huffman_code_by_char);
         
-        if (code.bit_len == 0) {
+        if (code_ptr == NULL) {
             fprintf(stderr, "Error: Character '%c' not found in binary_huffman_code array\n", ch);
             exit(EXIT_FAILURE);
         }
+        binary_huffman_code code = *code_ptr;
         // Write the bits of the code to the buffer
 
     // worst case scenario the code is longer than 64 bits
@@ -328,10 +329,23 @@ void encoding_main(char* input_filename, char* output_filename){
     huffman_codes* codes = fill_the_array(huffman_tree_root, frequency_array_size);
     // Convert to binary_huffman_code array
     binary_huffman_code* binary_codes = convert_to_binary_huffman_codes(codes, frequency_array_size);
+    printf("KÉSZ A FA — MOST LISTÁZOM A KÓDOKAT:\n");
+    for (int i = 0; i < frequency_array_size; i++) {
+        printf("Character: '%c' Code: %s\n", codes[i].ch, codes[i].code);
+    }
     // Create a file if not exists
     create_a_file_if_not_exists(output_filename);
     // Create a header in the output file
     create_a_header(output_filename, frequency_array, frequency_array_size);
     // Write the encoded data to the output file
     write_encoded_data(input_filename, output_filename, binary_codes, frequency_array_size);
+
+    free(frequency_array);
+    free(pointer_array);
+    free_huffman_tree(huffman_tree_root);
+    free(codes);
+    for (int i = 0; i < frequency_array_size; i++) {
+        free(binary_codes[i].bits);
+    }
+    free(binary_codes);
 }
