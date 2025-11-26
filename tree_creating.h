@@ -38,7 +38,7 @@ CharStat** create_a_pointer_array(CharStat* arr, int size);
 // Returns:
 // - pointer to the newly created array of CharStat pointers
 
-void fill_codes(CharStat* root, huffman_codes* arr, char*newcode,int *index ,int depth);
+void fill_codes(CharStat* root, huffman_codes* arr,unsigned char*newcode,int *index ,int depth);
 // Fills the huffman_codes array with codes generated from the Huffman tree
 // Parameters:
 // - root: pointer to the root of the Huffman tree

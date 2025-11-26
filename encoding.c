@@ -24,9 +24,9 @@ Functions:
 */
 
 
-char* get_a_filename(){
+unsigned char* get_a_filename(){
     // The goal is to get a filename from the user
-    char filename[256]; // buffer to hold the filename input
+    unsigned char filename[256]; // buffer to hold the filename input
     printf("Enter the filename: ");
 
     if (fgets(filename, sizeof(filename), stdin) != NULL) {
@@ -38,7 +38,7 @@ char* get_a_filename(){
         }
 
         // Allocate memory for the filename to return
-        char* result = (char*)malloc((strlen(filename) + 1) * sizeof(char));
+        unsigned char* result = (unsigned char*)malloc((strlen((char*)filename) + 1) * sizeof(unsigned char));
 
         // Error handling for memory allocation
         if (result == NULL) {
@@ -57,9 +57,9 @@ char* get_a_filename(){
     }
 }
 
-CharStat* create_frequency_array(char* filename, int* out_count){
+CharStat* create_frequency_array(unsigned char* filename, int* out_count){
     // The goal is to create a frequency array from a file
-    FILE* file = fopen(filename, "r"); // open the file in read mode
+    FILE* file = fopen((unsigned char*)filename, "r"); // open the file in read mode
     
     // Error handling for file opening
     if (file == NULL) {
@@ -97,7 +97,7 @@ CharStat* create_frequency_array(char* filename, int* out_count){
     // Fill the frequency array, j is the index for freq_array, i for the original array
     for (int i = 0, j = 0; i < 128; i++) { 
         if (frequencies[i] > 0) {
-            freq_array[j].character = (char)i;
+            freq_array[j].character = (unsigned char)i;
             freq_array[j].count = frequencies[i];
             freq_array[j].Left = NULL;
             freq_array[j].Right = NULL;
@@ -108,7 +108,7 @@ CharStat* create_frequency_array(char* filename, int* out_count){
     return freq_array; // return the frequency array
 }
 
-void fill_codes(CharStat* root, huffman_codes* arr, char*newcode,int *index ,int depth){
+void fill_codes(CharStat* root, huffman_codes* arr, unsigned char* newcode,int *index ,int depth){
     //the gole of the function is to fill the array with recursion but an another function will be needed
     if (root == NULL) return;
 
@@ -133,7 +133,7 @@ void fill_codes(CharStat* root, huffman_codes* arr, char*newcode,int *index ,int
 huffman_codes *fill_the_array(CharStat* root, int size){
     // the goal is to give back a perfectly sized array with the codes
     huffman_codes* a = (huffman_codes*)malloc(size*sizeof(huffman_codes));
-    char newcode[128]={0}; //should be enought
+    unsigned char newcode[128]={0}; //should be enought
     int index = 0;
     int depth = 0;
     fill_codes(root, a, newcode, &index, depth); 
@@ -188,7 +188,7 @@ binary_huffman_code* convert_to_binary_huffman_codes(huffman_codes* codes, int s
 
     return binary_codes;
 }
-void create_a_file_if_not_exists(char* filename) {
+void create_a_file_if_not_exists(unsigned char* filename) {
     // The goal is to create a file if it does not exist
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
@@ -204,7 +204,7 @@ void create_a_file_if_not_exists(char* filename) {
     }
 }
 
-void create_a_header(char* filename, CharStat* filtered_array, int size) {
+void create_a_header(unsigned char* filename, CharStat* filtered_array, int size) {
     // The goal is to create a header in the specified file
     FILE* file = fopen(filename, "wb");
     if (file == NULL) {
@@ -222,7 +222,7 @@ void create_a_header(char* filename, CharStat* filtered_array, int size) {
 }
 
 
-void write_encoded_data(char* input_filename,char* output_filename , binary_huffman_code* binary_codes, int size) {
+void write_encoded_data(unsigned char* input_filename,unsigned char* output_filename , binary_huffman_code* binary_codes, int size) {
     // The goal is to write the encoded data to a file
     FILE* output_file = fopen(output_filename, "ab"); // open in append binary mode
 
@@ -317,7 +317,7 @@ void write_encoded_data(char* input_filename,char* output_filename , binary_huff
     fclose(output_file);
 }
 
-void encoding_main(char* input_filename, char* output_filename){
+void encoding_main(unsigned char* input_filename, unsigned char* output_filename){
     // Main function to handle the encoding process
     int frequency_array_size = 0;
     CharStat* frequency_array = create_frequency_array(input_filename, &frequency_array_size);

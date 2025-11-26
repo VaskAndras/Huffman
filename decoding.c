@@ -70,7 +70,7 @@ void read_header(char *encoded_file, CharStat **out_array, int *out_size) {
         items_read = fread(&((*out_array)[i].count), sizeof(int), 1, file);
         if (items_read != 1) {
             fprintf(stderr, "ERROR at index %d: Could not read count\n", i);
-            fprintf(stderr, "Character was: 0x%02X\n", (unsigned char)(*out_array)[i].character);
+            fprintf(stderr, "Character was: 0x%02X\n", (char)(*out_array)[i].character);
             fprintf(stderr, "File position: %ld\n", ftell(file));
             free(*out_array);
             fclose(file);
@@ -101,7 +101,7 @@ void decode_file(CharStat *root, char *input_filename, char *output_filename) {
     }
     // Start decoding
     CharStat *current = root;
-    unsigned char byte;
+    char byte;
     size_t bytes_read;
 
     int size_of_header;
@@ -115,10 +115,10 @@ void decode_file(CharStat *root, char *input_filename, char *output_filename) {
     fseek(input_file, sizeof(int) + size_of_header * (sizeof(char) + sizeof(int)), SEEK_SET); 
 
 
-    while ((bytes_read = fread(&byte, sizeof(unsigned char), 1, input_file)) == 1) {
+    while ((bytes_read = fread(&byte, sizeof(char), 1, input_file)) == 1) {
         for (int i = 0; i < 8; i++) {
             // Traverse the Huffman tree
-            unsigned char mask= 0b10000000 >> i;
+            char mask= 0b10000000 >> i;
             if (byte & mask) {
                 // Bit is 1, go right
                 current = current->Right;
@@ -138,7 +138,7 @@ void decode_file(CharStat *root, char *input_filename, char *output_filename) {
     fclose(input_file);
     fclose(output_file);
 }
-void decoding_main(char *input_filename, char *output_filename) {
+void decoding_main(unsigned char *input_filename, unsigned char *output_filename) {
     // Main function to handle the decoding process
     CharStat *frequency_array = NULL;
     int size = 0;

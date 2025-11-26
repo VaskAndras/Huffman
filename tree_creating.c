@@ -111,6 +111,7 @@ void free_huffman_tree(CharStat* root) {
 }
 
 // Comparison function for qsort to sort CharStat pointers by count (and character for tie-breaking)
+// void pointer parameters are cast to appropriate types inside the function
 int cmp_charstat_ptr_by_count(const void *pa, const void *pb) {
     const CharStat * const * a = pa;   // casting to pointer to pointer to CharStat
     const CharStat * const * b = pb;   // casting to pointer to pointer to CharStat

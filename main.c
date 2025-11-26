@@ -10,9 +10,9 @@
 // TESTING MAIN FUNCTION
 
 int main() {
-    char input_filename[256];// to store input filename
-    char encoded_filename[256]; // to store encoded filename
-    char output_filename[256]; // to store decoded output filename
+    unsigned char input_filename[256];// to store input filename
+    unsigned char encoded_filename[256]; // to store encoded filename
+    unsigned char output_filename[256]; // to store decoded output filename
 
     printf("Enter input filename: "); // prompt user for input filename
     scanf("%255s", input_filename);
